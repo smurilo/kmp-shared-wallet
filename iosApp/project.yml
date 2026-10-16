@@ -1,0 +1,22 @@
+# XcodeGen spec: `brew install xcodegen && xcodegen` generates iosApp.xcodeproj
+name: iosApp
+options:
+  bundleIdPrefix: com.smsmurilo
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  iosApp:
+    type: application
+    platform: iOS
+    sources: [iosApp]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.smsmurilo.wallet
+        GENERATE_INFOPLIST_FILE: YES
+        FRAMEWORK_SEARCH_PATHS: "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)"
+        OTHER_LDFLAGS: ["-framework", "Shared"]
+    preBuildScripts:
+      - name: Build Kotlin shared framework
+        script: |
+          cd "$SRCROOT/.."
+          ./gradlew :shared:embedAndSignAppleFrameworkForXcode
